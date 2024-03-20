@@ -28,7 +28,7 @@ const OrderItem = ({ order }: Props) => {
         <span>
           {date
             ? new Date(date).toLocaleDateString(
-                locale == 'EN' ? 'en-US' : 'ru-RU',
+                locale == 'en' ? 'en-US' : 'ru-RU',
               )
             : '-'}
           ,
