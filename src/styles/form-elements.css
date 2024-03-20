@@ -1,0 +1,22 @@
+input[type='text'],
+input[type='password'],
+select {
+  @apply w-full rounded-md px-3 py-2 shadow-md;
+}
+
+button.btn {
+  @apply cursor-pointer rounded-md bg-violet-700 px-3 py-1 text-base font-medium text-white shadow-md transition-colors;
+}
+.btn-line {
+  @apply cursor-pointer rounded-md border border-violet-700 bg-white px-3 py-1 text-base font-medium shadow-md transition-colors;
+}
+button.btn:hover {
+  @apply bg-violet-500;
+}
+button.btn-line:hover {
+  @apply border-violet-500 bg-violet-500 text-white;
+}
+
+label.label {
+  @apply inline-block w-full text-left font-medium;
+}
