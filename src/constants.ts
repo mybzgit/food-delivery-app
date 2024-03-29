@@ -1,5 +1,3 @@
-export const IMAGE_PATH =
-  'https://firebasestorage.googleapis.com/v0/b/apptrix-app.appspot.com/o/'
-export const DB_PATH =
-  'https://apptrix-app-default-rtdb.firebaseio.com'
+export const IMAGE_PATH = import.meta.env.VITE_imagePath
+export const DB_PATH = import.meta.env.VITE_dbPath
 export const DEFAULT_LIMIT = 4
