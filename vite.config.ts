@@ -9,6 +9,5 @@ export default defineConfig({
       plugins: [tailwindcss()],
     },
   },
-  plugins: [react()],
-  base: '/apptrix-app/'
+  plugins: [react()]
 })

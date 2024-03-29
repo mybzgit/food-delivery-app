@@ -9,7 +9,7 @@ import SuccessOrder from '../pages/SuccessOrder'
 
 const Router = () => {
   return (
-    <BrowserRouter basename='/apptrix-app/'>
+    <BrowserRouter>
       <Routes>
         <Route path='/' element={<Layout />}>
           <Route index element={<MainPage />} />

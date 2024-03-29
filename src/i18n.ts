@@ -5,7 +5,7 @@ import LanguageDetector from 'i18next-browser-languagedetector'
 const resources = {
   en: {
     translation: {
-      'title': 'Apptrix Food',
+      'title': 'Food Delivery',
       'menu': 'Menu',
       'logout': 'Log out',
       'order-history': 'Your order history:',
@@ -31,7 +31,7 @@ const resources = {
   },
   ru: {
     translation: {
-      'title': 'Apptrix Еда',
+      'title': 'Доставка Еды',
       'menu': 'Меню',
       'logout': 'Выйти',
       'order-history': 'Ваша история заказов:',

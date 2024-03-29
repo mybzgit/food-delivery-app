@@ -1,4 +1,4 @@
-# APPTRIX-APP
+# FOOD-APP
 
 Run application locally:
 
