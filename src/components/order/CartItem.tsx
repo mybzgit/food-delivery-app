@@ -1,7 +1,7 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import { IMAGE_PATH } from '../../constants'
-import { useCartStore } from '../../store/cart-state'
 import { CartItemType } from '../../types/cartItem'
+import QuantityButtons from '../menu/QuantityButtons'
 
 type Props = {
   item: CartItemType
@@ -14,25 +14,13 @@ const CartItem = React.memo(
       product: { id, name, image, description, price },
     } = item
 
-    const updateCartItem = useCartStore(
-      (state) => state.updateCartItem,
-    )
-    const deleteCartItem = useCartStore(
-      (state) => state.deleteCartItem,
-    )
-
-    const reduceQuantity = useCallback(() => {
-      if (quantity == 1) deleteCartItem(id)
-      else updateCartItem(id, quantity! - 1)
-    }, [quantity, id, deleteCartItem, updateCartItem])
-
     return (
       <div className='h-[170px] w-full max-w-[500px] rounded-md border border-violet-800 bg-white p-4'>
         <div className='flex flex-row gap-4'>
           <div className='min-h-[100px] min-w-[100px]'>
             <img
               className='w-full max-w-[100px]'
-              src={`${IMAGE_PATH}${image}?alt=media`}
+              src={`${IMAGE_PATH}/${image}?alt=media`}
               alt={`image of ${name}`}
             />
           </div>
@@ -44,23 +32,7 @@ const CartItem = React.memo(
           </div>
         </div>
         <div className='float-right mt-2 flex flex-row items-center gap-2'>
-          <div className='flex flex-row items-center gap-2'>
-            <button
-              className='btn'
-              type='button'
-              onClick={reduceQuantity}
-            >
-              -
-            </button>
-            <div>{quantity}</div>
-            <button
-              className='btn'
-              type='button'
-              onClick={() => updateCartItem(id, quantity + 1)}
-            >
-              +
-            </button>
-          </div>
+          <QuantityButtons id={id} quantity={quantity} />
         </div>
       </div>
     )
