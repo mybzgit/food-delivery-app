@@ -1,12 +1,10 @@
 import { useEffect } from 'react'
+import i18n from '../../i18n'
 import { useAppStore } from '../../store/app-state'
-import { useTranslation } from 'react-i18next'
 
 const LangSwitch = () => {
   const locale = useAppStore((state) => state.locale)
   const switchLocale = useAppStore((state) => state.switchLocale)
-
-  const { i18n } = useTranslation()
 
   useEffect(() => {
     i18n.changeLanguage(locale)

@@ -1,18 +1,17 @@
 import { signOut } from 'firebase/auth'
-import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { auth } from '../../firebase'
 import { useAppStore } from '../../store/app-state'
 import HeaderCart from './HeaderCart'
 import LangSwitch from './LangSwitch'
-import { useTranslation } from 'react-i18next'
 
 const Header = () => {
   const token = useAppStore((state) => state.token)
 
-  const onSignOut = useCallback(() => {
+  const handleSignOut = () => {
     signOut(auth)
-  }, [])
+  }
 
   const { t } = useTranslation()
 
@@ -30,7 +29,7 @@ const Header = () => {
           <button
             className='btn-line'
             type='button'
-            onClick={onSignOut}
+            onClick={handleSignOut}
           >
             {t('logout')}
           </button>
