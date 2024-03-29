@@ -8,7 +8,7 @@ type Props = {
   order: Order
 }
 
-const OrderItem = ({ order }: Props) => {
+export default function OrderItem({ order }: Props) {
   const { items, address, paymentType, date } = order
 
   const totalSum = useMemo(() => {
@@ -22,7 +22,7 @@ const OrderItem = ({ order }: Props) => {
   const locale = useAppStore((state) => state.locale)
 
   return (
-    <div className='space-y-2 rounded-md border border-violet-800 bg-white bg-white p-2 text-left'>
+    <div className='space-y-2 rounded-md border border-violet-800 bg-white p-2 text-left'>
       <div className='inline space-x-1'>
         <span className='font-semibold'>{t('date')}</span>
         <span>
@@ -46,7 +46,7 @@ const OrderItem = ({ order }: Props) => {
           >
             <img
               className='w-full max-w-[50px]'
-              src={`${IMAGE_PATH}${i.product.image}?alt=media`}
+              src={`${IMAGE_PATH}/${i.product.image}?alt=media`}
               alt={`image of ${i.product.name}`}
             />
             {i.product.name} ({i.product.price} $) x {i.quantity}
@@ -60,5 +60,3 @@ const OrderItem = ({ order }: Props) => {
     </div>
   )
 }
-
-export default OrderItem
