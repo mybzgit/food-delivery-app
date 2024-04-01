@@ -1,5 +1,6 @@
 import {
-  useInfiniteQuery
+  useInfiniteQuery,
+  useQueryClient,
 } from '@tanstack/react-query'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Loader from '../components/layout/Loader'
@@ -60,14 +61,23 @@ const MenuPage = () => {
 
   const bottomRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    refetch()
-  }, [locale])
+  const key = items?.at(-1)?.id
 
   useEffect(() => {
-    const key = items?.at(-1).id
-    setLastKey(key)
-  }, [])
+    setLastKey(undefined)
+  }, [locale])
+
+  const queryClient = useQueryClient()
+
+  useEffect(() => {
+    if (lastKey === undefined) {
+      queryClient.setQueryData(['items'], () => ({
+        pages: [],
+        pageParams: [DEFAULT_LIMIT],
+      }))
+      refetch()
+    }
+  }, [lastKey, refetch, queryClient])
 
   useEffect(() => {
     if (bottomRef.current == null) return
@@ -76,7 +86,6 @@ const MenuPage = () => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry?.isIntersecting) {
-          const key = items?.at(-1).id
           key !== undefined && setLastKey(key)
         }
       },
@@ -84,15 +93,13 @@ const MenuPage = () => {
     )
     observer.observe(cachedRef)
     return () => observer.unobserve(cachedRef)
-  }, [bottomRef, items])
+  }, [bottomRef, key])
 
- 
   useEffect(() => {
     if (lastKey !== undefined) {
       fetchNextPage()
-    } 
-  }, [lastKey])
-
+    }
+  }, [lastKey, fetchNextPage])
 
   const loading = isLoading || isFetching || isFetchingNextPage
 
