@@ -9,11 +9,11 @@ const Button = ({
   children,
   className,
   type = 'button',
-  ...rest
+  ...props
 }: Props) => {
   const btnClass = variant == 'primary' ? 'btn ' : 'btn-line '
   return (
-    <button type={type} className={btnClass + className} {...rest}>
+    <button type={type} className={btnClass + className} {...props}>
       {children}
     </button>
   )
