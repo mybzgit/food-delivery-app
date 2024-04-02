@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { auth } from '../../firebase'
 import ValidationErrors from '../layout/ValidationErrors'
+import Button from '../form/Button'
 
 const validate = (email: string, password: string) => {
   const errorArr = []
@@ -23,7 +24,9 @@ const LoginForm = () => {
   const navigate = useNavigate()
   const [errors, setErrors] = useState<string[]>([])
 
-  const handleAuth = (authFn: (email: string, password: string) => void) => {
+  const handleAuth = (
+    authFn: (email: string, password: string) => void,
+  ) => {
     const email = emailRef.current?.value as string
     const password = passwordRef.current?.value as string
 
@@ -42,20 +45,20 @@ const LoginForm = () => {
     e.preventDefault()
     handleAuth((email, password) => {
       signInWithEmailAndPassword(auth, email, password)
-      .then(() => navigate('/'))
-      .catch((error) => {
-        setErrors([error.message])
-      })
+        .then(() => navigate('/'))
+        .catch((error) => {
+          setErrors([error.message])
+        })
     })
   }
 
   const handleRegister = () => {
     handleAuth((email, password) => {
       createUserWithEmailAndPassword(auth, email, password)
-      .then(() => navigate('/'))
-      .catch((error) => {
-        setErrors([error.message])
-      })
+        .then(() => navigate('/'))
+        .catch((error) => {
+          setErrors([error.message])
+        })
     })
   }
 
@@ -65,7 +68,10 @@ const LoginForm = () => {
   const { t } = useTranslation()
 
   return (
-    <form onSubmit={handleLogin} className='m-auto flex w-full flex-col gap-4 md:w-1/3'>
+    <form
+      onSubmit={handleLogin}
+      className='m-auto flex w-full flex-col gap-4 md:w-1/3'
+    >
       <div>
         <label className='label' htmlFor='id'>
           Email:
@@ -87,17 +93,11 @@ const LoginForm = () => {
       {errors.length > 0 && <ValidationErrors errors={errors} />}
 
       <div className='flex flex-col'>
-        <button className='btn' type='submit'>
-          {t('login')}
-        </button>
+        <Button type='submit'>{t('login')}</Button>
         {t('or')}
-        <button
-          className='btn-line'
-          type='button'
-          onClick={handleRegister}
-        >
+        <Button variant='line' onClick={handleRegister}>
           {t('register')}
-        </button>
+        </Button>
       </div>
     </form>
   )

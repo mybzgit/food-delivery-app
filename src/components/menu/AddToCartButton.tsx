@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { useCartStore } from '../../store/cart-state'
 import { ProductType } from '../../types/product'
+import Button from '../form/Button'
 
 type Props = {
   item: ProductType
@@ -11,12 +12,6 @@ export default function AddToCartButton({ item }: Props) {
   const { t } = useTranslation()
 
   return (
-    <button
-      className='btn'
-      type='button'
-      onClick={() => addCartItem(item)}
-    >
-      {t('add')}
-    </button>
+    <Button onClick={() => addCartItem(item)}> {t('add')}</Button>
   )
 }

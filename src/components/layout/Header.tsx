@@ -5,6 +5,7 @@ import { auth } from '../../firebase'
 import { useAppStore } from '../../store/app-state'
 import HeaderCart from './HeaderCart'
 import LangSwitch from './LangSwitch'
+import Button from '../form/Button'
 
 const Header = () => {
   const token = useAppStore((state) => state.token)
@@ -26,13 +27,9 @@ const Header = () => {
 
       <div className='flex flex-col-reverse items-end gap-1 md:flex-row md:items-center md:gap-4'>
         {token !== null && (
-          <button
-            className='btn-line'
-            type='button'
-            onClick={handleSignOut}
-          >
+          <Button variant='line' onClick={handleSignOut}>
             {t('logout')}
-          </button>
+          </Button>
         )}
         <div className='flex flex-row items-center gap-2'>
           <LangSwitch />

@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 import { useCartStore } from '../../store/cart-state'
 import { ProductType } from '../../types/product'
+import Button from '../form/Button'
 
 type Props = {
   id: ProductType['id']
@@ -18,17 +19,11 @@ const QuantityButtons = ({ id, quantity }: Props) => {
 
   return (
     <div className='flex flex-row items-center gap-2'>
-      <button className='btn' type='button' onClick={reduceQuantity}>
-        -
-      </button>
+      <Button onClick={reduceQuantity}>-</Button>
       <div>{quantity}</div>
-      <button
-        className='btn'
-        type='button'
-        onClick={() => updateCartItem(id, quantity + 1)}
-      >
+      <Button onClick={() => updateCartItem(id, quantity + 1)}>
         +
-      </button>
+      </Button>
     </div>
   )
 }

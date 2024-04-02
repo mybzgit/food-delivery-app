@@ -7,6 +7,7 @@ import { useAppStore } from '../../store/app-state'
 import { useCartStore } from '../../store/cart-state'
 import ValidationErrors from '../layout/ValidationErrors'
 import { useTranslation } from 'react-i18next'
+import Button from '../form/Button'
 
 const DeliveryForm = () => {
   const [errors, setErrors] = useState<string[]>([])
@@ -131,13 +132,13 @@ const DeliveryForm = () => {
 
       {errors.length > 0 && <ValidationErrors errors={errors} />}
 
-      <button
-        className='btn col-start-1 mt-2'
+      <Button
+        className='col-start-1 mt-2'
         type='submit'
         onClick={onPlaceOrder}
       >
         {t('place-order')}
-      </button>
+      </Button>
     </form>
   )
 }
