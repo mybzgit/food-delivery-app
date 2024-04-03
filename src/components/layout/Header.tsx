@@ -6,8 +6,10 @@ import { useAppStore } from '../../store/app-state'
 import HeaderCart from './HeaderCart'
 import LangSwitch from './LangSwitch'
 import Button from '../form/Button'
+import { useItemCount } from '../../store/cart-state'
 
 const Header = () => {
+  const itemCount = useItemCount()
   const token = useAppStore((state) => state.token)
 
   const handleSignOut = () => {
@@ -33,7 +35,7 @@ const Header = () => {
         )}
         <div className='flex flex-row items-center gap-2'>
           <LangSwitch />
-          <HeaderCart />
+          <HeaderCart itemCount={itemCount} token={token} />
         </div>
       </div>
     </header>
