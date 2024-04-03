@@ -3,6 +3,7 @@ import { IMAGE_PATH } from '../../constants'
 import { ProductType } from '../../types/product'
 import QuantityButtons from './QuantityButtons'
 import AddToCartButton from './AddToCartButton'
+import ProductImage from './ProductImage'
 
 type Props = {
   item: ProductType
@@ -15,13 +16,12 @@ const Product = React.memo(
 
     return (
       <div className='h-[420px] max-w-[300px] rounded-md border border-violet-800 bg-white p-4 hover:border-violet-500'>
-        <div className='min-h-[250px] min-w-[250px]'>
-          <img
-            className='w-full max-w-[250px]'
-            src={`${IMAGE_PATH}/${image}?alt=media`}
-            alt={`image of ${name}`}
-          />
-        </div>
+        <ProductImage
+          containerStyle='min-h-[250px] min-w-[250px]'
+          imageStyle='w-full max-w-[250px] m-auto'
+          src={`${IMAGE_PATH}/${image}?alt=media`}
+          alt={`image of ${name}`}
+        />
 
         <h3 className='mt-2 text-left text-lg font-medium'>{name}</h3>
         <div className='mt-2 text-left text-sm'>{description}</div>

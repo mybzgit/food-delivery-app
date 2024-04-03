@@ -2,6 +2,7 @@ import React from 'react'
 import { IMAGE_PATH } from '../../constants'
 import { CartItemType } from '../../types/cartItem'
 import QuantityButtons from '../menu/QuantityButtons'
+import ProductImage from '../menu/ProductImage'
 
 type Props = {
   item: CartItemType
@@ -17,13 +18,12 @@ const CartItem = React.memo(
     return (
       <div className='h-[170px] w-full max-w-[500px] rounded-md border border-violet-800 bg-white p-4'>
         <div className='flex flex-row gap-4'>
-          <div className='min-h-[100px] min-w-[100px]'>
-            <img
-              className='w-full max-w-[100px]'
-              src={`${IMAGE_PATH}/${image}?alt=media`}
-              alt={`image of ${name}`}
-            />
-          </div>
+          <ProductImage
+            containerStyle='min-h-[100px] min-w-[100px]'
+            imageStyle='w-full max-w-[100px]'
+            src={`${IMAGE_PATH}/${image}?alt=media`}
+            alt={`image of ${name}`}
+          />
 
           <div className='space-y-2 text-left'>
             <h3 className='text-lg font-medium'>{name}</h3>
