@@ -1,23 +1,57 @@
-import { useCallback, useState } from 'react'
-import { Order, paymentTypes } from '../../types/order'
 import { useMutation } from '@tanstack/react-query'
+import { useFormik } from 'formik'
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { postData } from '../../utils/fetchData'
 import { useAppStore } from '../../store/app-state'
 import { useCartStore } from '../../store/cart-state'
-import ValidationErrors from '../layout/ValidationErrors'
-import { useTranslation } from 'react-i18next'
+import { Order, PaymentType, paymentTypes } from '../../types/order'
+import { postData } from '../../utils/fetchData'
 import Button from '../form/Button'
+import ValidationErrors from '../layout/ValidationErrors'
+
+type ValuesType = {
+  street: string
+  building: string
+  apartment: string
+  paymentType: PaymentType["name"]
+}
+
+const validate = (values: ValuesType) => {
+  const errors = {} as ValuesType
+  const { street, building } = values
+
+  if (street.trim() == '') errors.street = 'Street is empty'
+  if (building.trim() == '') errors.building = 'Building is empty'
+
+  return errors
+}
 
 const DeliveryForm = () => {
   const [errors, setErrors] = useState<string[]>([])
-
   const navigate = useNavigate()
 
-  const [street, setStreet] = useState('')
-  const [building, setBuilding] = useState('')
-  const [apartment, setApartment] = useState('')
-  const [paymentType, setPaymentType] = useState(paymentTypes[0].id)
+  const formik = useFormik({
+    initialValues: {
+      street: '',
+      building: '',
+      apartment: '',
+      paymentType: paymentTypes[0].id,
+    },
+    validate,
+    onSubmit: (values: ValuesType) => {
+      const { street, building, apartment, paymentType } = values
+      setErrors([])
+      const order: Order = {
+        userId: userId!,
+        items,
+        address: `${street}, ${building}, ${apartment}`,
+        paymentType,
+        date: new Date().toDateString(),
+      }
+      placeOrderMutation.mutate(order)
+    },
+  })
 
   const token = useAppStore((state) => state.token)
   const userId = useAppStore((state) => state.userId)
@@ -37,44 +71,13 @@ const DeliveryForm = () => {
     },
   })
 
-  const onPlaceOrder = useCallback(
-    (e: React.MouseEvent<HTMLElement>) => {
-      e.preventDefault()
-
-      const errorArr = []
-      if (street.trim() == '') errorArr.push('Street is empty')
-      if (building.trim() == '') errorArr.push('Building is empty')
-
-      if (errorArr.length > 0) {
-        setErrors(errorArr)
-        return
-      } else {
-        setErrors([])
-        const order: Order = {
-          userId: userId!,
-          items,
-          address: `${street}, ${building}, ${apartment}`,
-          paymentType,
-          date: new Date().toDateString(),
-        }
-        placeOrderMutation.mutate(order)
-      }
-    },
-    [
-      street,
-      building,
-      apartment,
-      userId,
-      paymentType,
-      items,
-      placeOrderMutation,
-    ],
-  )
-
   const { t } = useTranslation()
 
   return (
-    <form className='mt-4 grid gap-2 md:grid-cols-2'>
+    <form
+      className='mt-4 grid gap-2 md:grid-cols-2'
+      onSubmit={formik.handleSubmit}
+    >
       <div>
         <label className='label' htmlFor='street'>
           {t('street')}
@@ -83,9 +86,9 @@ const DeliveryForm = () => {
           type='text'
           id='street'
           name='street'
-          value={street}
+          value={formik.values.street}
           className='w-full'
-          onChange={(e) => setStreet(e.currentTarget.value)}
+          onChange={formik.handleChange}
         />
       </div>
 
@@ -97,8 +100,8 @@ const DeliveryForm = () => {
           type='text'
           id='building'
           name='building'
-          value={building}
-          onChange={(e) => setBuilding(e.currentTarget.value)}
+          value={formik.values.building}
+          onChange={formik.handleChange}
         />
       </div>
       <div>
@@ -109,8 +112,8 @@ const DeliveryForm = () => {
           type='text'
           id='apartment'
           name='apartment'
-          value={apartment}
-          onChange={(e) => setApartment(e.currentTarget.value)}
+          value={formik.values.apartment}
+          onChange={formik.handleChange}
         />
       </div>
       <div>
@@ -119,8 +122,8 @@ const DeliveryForm = () => {
         </label>
         <select
           id='paymenttype'
-          value={paymentType}
-          onChange={(e) => setPaymentType(e.currentTarget.value)}
+          value={formik.values.paymentType}
+          onChange={formik.handleChange}
         >
           {paymentTypes.map(({ id, name }) => (
             <option key={id} value={id}>
@@ -130,13 +133,15 @@ const DeliveryForm = () => {
         </select>
       </div>
 
+      {formik.errors.street ? (
+        <ValidationErrors errors={[formik.errors.street]} />
+      ) : null}
+      {formik.errors.building ? (
+        <ValidationErrors errors={[formik.errors.building]} />
+      ) : null}
       {errors.length > 0 && <ValidationErrors errors={errors} />}
 
-      <Button
-        className='col-start-1 mt-2'
-        type='submit'
-        onClick={onPlaceOrder}
-      >
+      <Button className='col-start-1 mt-2' type='submit'>
         {t('place-order')}
       </Button>
     </form>

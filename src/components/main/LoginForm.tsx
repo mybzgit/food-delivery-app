@@ -2,81 +2,80 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from 'firebase/auth'
-import { SyntheticEvent, useRef, useState } from 'react'
+import { useFormik } from 'formik'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { auth } from '../../firebase'
-import ValidationErrors from '../layout/ValidationErrors'
 import Button from '../form/Button'
+import ValidationErrors from '../layout/ValidationErrors'
 
-const validate = (email: string, password: string) => {
-  const errorArr = []
-  if (email.trim() == '') errorArr.push('Please enter email')
+type ValuesType = {
+  email: string
+  password: string
+}
+
+const validate = (values: ValuesType) => {
+  const errors = {} as ValuesType
+  const { email, password } = values
+  if (email.trim() == '')
+    errors.email = 'Please enter email'
   else if (
     email.trim().match(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g) === null
   )
-    errorArr.push('Email is invalid')
-  if (password.trim() == '') errorArr.push('Please enter password')
-  return errorArr
+    errors.email = 'Email is invalid'
+  if (password.trim() == '') errors.password = 'Please enter password'
+  return errors
 }
 
 const LoginForm = () => {
   const navigate = useNavigate()
   const [errors, setErrors] = useState<string[]>([])
 
-  const handleAuth = (
-    authFn: (email: string, password: string) => void,
-  ) => {
-    const email = emailRef.current?.value as string
-    const password = passwordRef.current?.value as string
-
-    const validationResult = validate(email, password)
-
-    if (validationResult.length > 0) {
-      setErrors(validationResult)
-      return
-    } else {
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    validate,
+    onSubmit: (values: ValuesType) => {
+      const { email, password } = values
       setErrors([])
-      authFn(email, password)
-    }
-  }
-
-  const handleLogin = (e: SyntheticEvent) => {
-    e.preventDefault()
-    handleAuth((email, password) => {
       signInWithEmailAndPassword(auth, email, password)
         .then(() => navigate('/'))
         .catch((error) => {
           setErrors([error.message])
         })
-    })
-  }
+    },
+  })
 
-  const handleRegister = () => {
-    handleAuth((email, password) => {
-      createUserWithEmailAndPassword(auth, email, password)
-        .then(() => navigate('/'))
-        .catch((error) => {
-          setErrors([error.message])
-        })
-    })
+  const handleRegister = (email: string, password: string) => {
+    setErrors([])
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(() => navigate('/'))
+      .catch((error) => {
+        setErrors([error.message])
+      })
   }
-
-  const emailRef = useRef<HTMLInputElement>(null)
-  const passwordRef = useRef<HTMLInputElement>(null)
 
   const { t } = useTranslation()
 
   return (
     <form
-      onSubmit={handleLogin}
+      onSubmit={formik.handleSubmit}
       className='m-auto flex w-full flex-col gap-4 md:w-1/3'
     >
       <div>
-        <label className='label' htmlFor='id'>
+        <label className='label' htmlFor='email'>
           Email:
         </label>
-        <input id='email' type='text' name='email' ref={emailRef} />
+        <input
+          id='email'
+          type='email'
+          name='email'
+          onChange={formik.handleChange}
+          value={formik.values.email}
+        />
       </div>
       <div>
         <label className='label' htmlFor='password'>
@@ -86,16 +85,31 @@ const LoginForm = () => {
           id='password'
           type='password'
           name='password'
-          ref={passwordRef}
+          onChange={formik.handleChange}
+          value={formik.values.password}
         />
       </div>
 
+      {formik.errors.email ? (
+        <ValidationErrors errors={[formik.errors.email]} />
+      ) : null}
+      {formik.errors.password ? (
+        <ValidationErrors errors={[formik.errors.password]} />
+      ) : null}
       {errors.length > 0 && <ValidationErrors errors={errors} />}
 
       <div className='flex flex-col'>
         <Button type='submit'>{t('login')}</Button>
         {t('or')}
-        <Button variant='line' onClick={handleRegister}>
+        <Button
+          variant='line'
+          onClick={() =>
+            handleRegister(
+              formik.values.email,
+              formik.values.password,
+            )
+          }
+        >
           {t('register')}
         </Button>
       </div>

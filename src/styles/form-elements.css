@@ -1,5 +1,6 @@
 input[type='text'],
 input[type='password'],
+input[type='email'],
 select {
   @apply w-full rounded-md px-3 py-2 shadow-md;
 }
